@@ -1,23 +1,21 @@
 <?php
 
 class Buku_model {
-    // Koneksi pdo
-    private $dbh, $stmt;
+    private $table = 'buku';
+    private $db;
 
     public function __construct() {
-        // data source name
-        $dsn = 'mysql:host=localhost;dbname=mvcdb';
-
-        try {
-            $this->dbh = new PDO( $dsn, 'root', '' );
-        } catch ( PDOException $e ) {
-            die( $e->getMessage() );
-        }
+        $this->db = new Database;
     }
 
     public function getBook() {
-        $this->stmt = $this->dbh->prepare( 'SELECT*FROM buku' );
-        $this->stmt->execute();
-        return $this->stmt->fetchAll( PDO::FETCH_ASSOC );
+        $this->db->query( 'SELECT*FROM ' . $this->table );
+        return $this->db->resultSet();
+    }
+
+    public function getBookById( $id ) {
+        $this->db->query( 'SELECT*FROM ' . $this->table . ' WHERE id=:id' );
+        $this->db->bind( 'id', $id );
+        return $this->db->single();
     }
 }
